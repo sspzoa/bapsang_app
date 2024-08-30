@@ -1,5 +1,7 @@
 import 'package:bapsang_app/app/core/theme/bapsang_colors.dart';
 import 'package:bapsang_app/app/core/theme/bapsnag_typography.dart';
+import 'package:bapsang_app/app/widgets/appbar.dart';
+import 'package:bapsang_app/app/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,31 +16,11 @@ class HomePage extends GetView<HomePageController> {
     final textTheme = Theme.of(context).extension<BapsangTypography>()!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() => ElevatedButton(
-                  onPressed: controller.isLoading.value
-                      ? null
-                      : controller.getFoodPosition,
-                  child: controller.isLoading.value
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          ),
-                        )
-                      : const Text('인식하기'),
-                )),
-            const SizedBox(height: 20),
+            const BapsangAppbar(header: '밥상'),
             Obx(() {
               if (controller.foodPositionList.value != null) {
                 return Expanded(
@@ -48,9 +30,27 @@ class HomePage extends GetView<HomePageController> {
                     itemBuilder: (context, index) {
                       final foodPosition = controller
                           .foodPositionList.value!.foodPositions[index];
-                      return ListTile(
-                        title: Text(foodPosition.food),
-                        subtitle: Text(foodPosition.position),
+                      return BapsangGestureDetectorWithScaleInteraction(
+                        onTap: () {},
+                        child: BapsangGestureDetectorWithOpacityInteraction(
+                          onTap: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10),
+                            child: ListTile(
+                              title: Text(
+                                foodPosition.food,
+                                style: textTheme.itemTitle
+                                    .copyWith(color: colorTheme.grayscale900),
+                              ),
+                              subtitle: Text(
+                                foodPosition.position,
+                                style: textTheme.itemDescription
+                                    .copyWith(color: colorTheme.grayscale600),
+                              ),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -58,6 +58,19 @@ class HomePage extends GetView<HomePageController> {
               }
               return Expanded(child: Container());
             }),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
+              child: controller.obx(
+                (_) => BapsangButton(
+                  onTap: controller.getFoodPosition,
+                  child: const Text("인식하기"),
+                ),
+                onLoading: BapsangButton.loading(
+                  backgroundColor: colorTheme.grayscale400,
+                  foregroundColor: colorTheme.primaryBrand,
+                ),
+              ),
+            ),
           ],
         ),
       ),

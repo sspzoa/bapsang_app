@@ -17,8 +17,8 @@ class BapsangLightThemeColors extends BapsangColors {
     grayscale800: const Color(0xFF4B5152),
     grayscale900: const Color(0xFF333738),
     grayscale1000: const Color(0xFF1C1F1F),
-    primaryBrand: const Color(0xFF2ED096),
-    primaryNegative: const Color(0xFFF7CE45),
+    primaryBrand: const Color(0xFF4D93E5),
+    primaryNegative: const Color(0xFFD76263),
   );
 }
 

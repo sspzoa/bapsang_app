@@ -1,23 +1,26 @@
 import 'package:bapsang_app/app/core/utils/errors.dart';
 import 'package:bapsang_app/app/services/foodPosition/service.dart';
 import 'package:bapsang_app/app/services/foodPosition/model.dart';
+import 'package:bapsang_app/app/widgets/snackbar.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class HomePageController extends GetxController {
+class HomePageController extends GetxController with StateMixin {
   final FoodPositionService foodPositionService =
   Get.find<FoodPositionService>();
   final ImagePicker imagePicker = ImagePicker();
 
-  final RxBool isLoading = false.obs;
-
   Rx<FoodPositionList?> get foodPositionList => foodPositionService.foodPositionList;
 
-  Future<void> getFoodPosition() async {
-    if (isLoading.value) return;
+  @override
+  void onInit() {
+    super.onInit();
+    change(null, status: RxStatus.success());
+  }
 
+  Future<void> getFoodPosition() async {
     try {
-      isLoading.value = true;
+      change(null, status: RxStatus.loading());
       XFile? imageData = await imagePicker.pickImage(
           source: ImageSource.camera,
           preferredCameraDevice: CameraDevice.rear,
@@ -28,8 +31,10 @@ class HomePageController extends GetxController {
       }
     } on BapsangException catch (e) {
       print('Error: ${e.message}');
+      change(null, status: RxStatus.error(e.message));
+      BapsangErrorSnackBar().open(e.message);
     } finally {
-      isLoading.value = false;
+      change(null, status: RxStatus.success());
     }
   }
 }
