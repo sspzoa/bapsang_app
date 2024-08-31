@@ -8,11 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class HomePageController extends GetxController with StateMixin {
-  final FoodPositionService foodPositionService = Get.find<FoodPositionService>();
+  final FoodPositionService foodPositionService =
+      Get.find<FoodPositionService>();
   final ImagePicker imagePicker = ImagePicker();
   final FlutterTts flutterTts = FlutterTts();
 
-  Rx<FoodPositionList?> get foodPositionList => foodPositionService.foodPositionList;
+  Rx<FoodPositionList?> get foodPositionList =>
+      foodPositionService.foodPositionList;
 
   @override
   void onInit() {
@@ -62,22 +64,37 @@ class HomePageController extends GetxController with StateMixin {
 
   Future<void> _speakFoodPositions() async {
     if (foodPositionList.value != null) {
-      String textToSpeak = "음식 위치 정보입니다. ";
+      List<String> validFoodPositions = [];
       for (var foodPosition in foodPositionList.value!.foodPositions) {
-        textToSpeak += _getFoodPositionText(foodPosition);
+        if (foodPosition.food != "오류") {
+          validFoodPositions.add(_getFoodPositionText(foodPosition));
+        }
       }
-      textToSpeak += "이상입니다. ";
-      await flutterTts.speak(textToSpeak);
+
+      if (validFoodPositions.isNotEmpty) {
+        String textToSpeak = "음식 위치 정보입니다. ${validFoodPositions.join(" ")}이상입니다.";
+        await flutterTts.speak(textToSpeak);
+      } else {
+        await flutterTts.speak("음식을 찾을 수 없습니다.");
+      }
     }
   }
 
   Future<void> speakSingleFoodPosition(FoodPosition foodPosition) async {
     String textToSpeak = _getFoodPositionText(foodPosition);
-    await flutterTts.speak(textToSpeak);
+    if (foodPosition.food == "오류") {
+      await flutterTts.speak('음식을 찾을 수 없습니다.');
+    } else {
+      await flutterTts.speak(textToSpeak);
+    }
   }
 
   String _getFoodPositionText(FoodPosition foodPosition) {
     final particle = _getProperParticle(foodPosition.food);
-    return "${foodPosition.food}$particle ${foodPosition.position} 방향에 있습니다. ";
+    if (foodPosition.food == "오류") {
+      return "음식을 찾을 수 없습니다. ";
+    } else {
+      return "${foodPosition.food}$particle ${foodPosition.position} 방향에 있습니다. ";
+    }
   }
 }
