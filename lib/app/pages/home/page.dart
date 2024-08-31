@@ -16,11 +16,18 @@ class HomePage extends GetView<HomePageController> {
     final textTheme = Theme.of(context).extension<BapsangTypography>()!;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            "밥상",
+            style: textTheme.header1.copyWith(color: colorTheme.grayscale1000),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const BapsangAppbar(header: '밥상'),
             Obx(() {
               if (controller.foodPositionList.value != null) {
                 return Expanded(
@@ -34,9 +41,14 @@ class HomePage extends GetView<HomePageController> {
                         onTap: () {},
                         child: BapsangGestureDetectorWithOpacityInteraction(
                           onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: colorTheme.grayscale200,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             child: ListTile(
                               title: Text(
                                 foodPosition.food,

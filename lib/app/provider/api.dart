@@ -2,7 +2,7 @@ import 'api_interface.dart';
 import 'interceptors/log.dart';
 
 class ProdApiProvider extends ApiProvider {
-  final baseUrl = 'https://api.sspzoa.io';
+  final baseUrl = 'https://bapsang.sharp0802.com';
 
   ProdApiProvider() {
     dio.options.baseUrl = baseUrl;
