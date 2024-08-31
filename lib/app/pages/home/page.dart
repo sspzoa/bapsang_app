@@ -40,7 +40,7 @@ class HomePage extends GetView<HomePageController> {
                       return BapsangGestureDetectorWithScaleInteraction(
                         onTap: () {},
                         child: BapsangGestureDetectorWithOpacityInteraction(
-                          onTap: () {},
+                          onTap: () => controller.speakSingleFoodPosition(foodPosition),
                           child: Container(
                             decoration: BoxDecoration(
                               color: colorTheme.grayscale200,

@@ -15,7 +15,7 @@ void main() async {
       title: '밥상',
       theme: lightThemeData,
       darkTheme: darkThemeData,
-      initialRoute: true ? Routes.HOME : Routes.TEST,
+      initialRoute: kReleaseMode ? Routes.HOME : Routes.TEST,
       getPages: AppPages.pages,
     ),
   );
